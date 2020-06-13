@@ -40,7 +40,7 @@ class Dog
   end
   
   def self.create(attr_hash)
-    dog = Dog.new(attr_hash)
+    dog = Dog.new(id: attr_hash)
     attr_hash.each {|key, value| dog.send(("#{key}="), value)}
     dog.save
     dog
