@@ -39,10 +39,35 @@ class Dog
     self
   end
   
-  def self.create(name, breed)
-    dog = Dog.new(name, breed)
+    def self.create(attr_hash)
+    dog = Dog.new(attr_hash)
+    attr_hash.each {|key, value| dog.send(("#{key}="), value)}
     dog.save
     dog
-  end  
+  end
+  # def self.create(name:, breed:)
+  #   dog = Dog.new(name, breed)
+  #   dog.save
+  #   dog
+  # end  
   
+    def self.new_from_db(row)
+    # id = row[0]
+    # name = row[1]
+    # breed = row[2]
+    Dog.new(id: row[0], name: row[1], breed: row[2])
+    end
+    
+    def self.find_by_id(id)
+      sql = <<-SQL
+        SELECT * FROM dogs WHERE id = ?
+      SQL
+      DB[:conn].execute(sql, id).map do |row|
+        self.new_from_db(row)
+       end.first
+    end
+    
+    def self.find_or_create_by
+      
+    end
 end
