@@ -40,7 +40,8 @@ class Dog
   end
   
   def self.create(attr_hash)
-    dog = Dog.new(attr_hash)
+    #dog = Dog.new(attr_hash) also passes
+    dog = Dog.new(id: attr_hash[0], name: attr_hash[1], breed: attr_hash[2])
     attr_hash.each {|key, value| dog.send(("#{key}="), value)}
     dog.save
     dog
@@ -71,7 +72,8 @@ class Dog
       dog = DB[:conn].execute("SELECT * FROM dogs WHERE name = ? AND breed = ?", name, breed)
       if !dog.empty?
         dog_data = dog[0]
-        dog = Dog.new(dog_data[0], dog_data[1], dog_data[2])
+        dog = self.new_from_db(dog_data)
+        # dog = Dog.new(id: row[0], name: row[1], breed: row[2])
       else
         dog = self.create(name: name, breed: breed)
       end
